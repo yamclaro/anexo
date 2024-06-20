@@ -1,0 +1,30 @@
+
+<%= simple_form_for(@i_inspecao) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs">
+    <%= f.input :nome %>
+    <%= f.input :descricao %>
+    <%= f.input :tipo %>
+    <%= f.input :status %>
+    <% if @i_inspecao.send('i_inspecao_anexo').attached? %>
+      <%= link_to  rails_blob_path(@i_inspecao.send('i_inspecao_anexo'), disposition: "attachment"), class: "btn btn-primary", title: "Download" do %>
+      <i class="ph ph-download-simple">download</i>
+    <% end %>
+
+      <%= render 'modal_delete'%>
+    <% else %>
+      <%= f.input :i_inspecao_anexo, label: 'Anexo de Inspeção' %>
+    <% end %>
+    
+
+
+
+  </div>
+  <br><br>
+
+  <div class="form-actions">
+    <%= f.button :submit, class:'btn btn-success' %>
+  </div>
+<% end %>
