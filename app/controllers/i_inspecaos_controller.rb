@@ -57,6 +57,14 @@ class IInspecaosController < ApplicationController
     end
   end
 
+  def destroy_file
+    file = ActiveStorage::Attachment.find(params[:id])
+    file.purge
+    respond_to do |format|
+        format.html { redirect_to i_inspecao_url(@i_inspecao), notice: "I inspecao was successfully created." }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_i_inspecao
@@ -65,6 +73,6 @@ class IInspecaosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def i_inspecao_params
-      params.require(:i_inspecao).permit(:nome, :descricao, :tipo, :status, :i_inspecao_anexo)
+      params.require(:i_inspecao).permit(:nome, :descricao, :tipo, :status, :i_inspecao_anexo, :id)
     end
 end

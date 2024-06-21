@@ -9,20 +9,50 @@
     <%= f.input :tipo %>
     <%= f.input :status %>
     <% if @i_inspecao.send('i_inspecao_anexo').attached? %>
-      <%= link_to  rails_blob_path(@i_inspecao.send('i_inspecao_anexo'), disposition: "attachment"), class: "btn btn-primary", title: "Download" do %>
-      <i class="ph ph-download-simple">download</i>
-    <% end %>
-
-      <%= render 'modal_delete'%>
+    <%= link_to 'Deletar Arquivo', '#', id: 'delete-file', data: { file_id: @i_inspecao.send('i_inspecao_anexo').blob_id }, class: 'btn btn-danger' %>
     <% else %>
       <%= f.input :i_inspecao_anexo, label: 'Anexo de Inspeção' %>
     <% end %>
-    
-
-
-
   </div>
   <br><br>
+  <script>
+  // JavaScript para deletar arquivo via AJAX
+document.addEventListener('DOMContentLoaded', function() {
+  const deleteButton = document.getElementById('delete-file');
+
+  if (deleteButton) {
+    deleteButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      const fileId = deleteButton.dataset.file_id;
+
+      if (confirm('Tem certeza que deseja deletar este arquivo?')) {
+        // Requisição AJAX para deletar o arquivo
+        fetch(`/delete_file/${fileId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            // Arquivo deletado com sucesso
+            console.log('Arquivo deletado com sucesso');
+            // Aqui você pode adicionar código para atualizar a interface após a exclusão, se necessário
+          } else {
+            // Tratar erro
+            console.error('Erro ao deletar arquivo');
+          }
+        })
+        .catch(error => {
+          console.error('Erro na requisição AJAX:', error);
+        });
+      }
+    });
+  }
+});
+
+  </script>
 
   <div class="form-actions">
     <%= f.button :submit, class:'btn btn-success' %>
